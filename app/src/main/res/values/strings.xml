@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="nome_usuario_cadastro">Nome</string>
+    <string name="idade_cadastro">Idade</string>
+    <string name="limpar_cadastro">Limpar</string>
+    <string name="salvar_cadastro">Salvar</string>
+    <string name="hint_nome">Nome Completo</string>
+    <string name="campos_apagados">Campos apagados</string>
+    <string name="preencha_o_nome_corretamente">Preencha o nome corretamente</string>
+    <string name="preencha_a_idade_corretamente">preencha a idade corretamente</string>
+    <string name="nome_valor">"Nome: "</string>
+    <string name="idade_valor">"Idade: "</string>
+</resources>
