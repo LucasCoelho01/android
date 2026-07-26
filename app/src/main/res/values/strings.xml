@@ -10,4 +10,18 @@
     <string name="preencha_a_idade_corretamente">preencha a idade corretamente</string>
     <string name="nome_valor">"Nome: "</string>
     <string name="idade_valor">"Idade: "</string>
+    <string name="eh_diabetico">É Diabético?</string>
+    <string name="diabetico_true">Diabético</string>
+    <string name="diabetico_false">Não diabético</string>
+    <string name="nao_informar">Prefiro não informar</string>
+    <string name="masculino">Masculino</string>
+    <string name="feminino">Feminino</string>
+    <string name="sexo_valor">"Sexo: "</string>
+    <string name="faltou_selecionar_o_sexo">Faltou selecionar o sexo!</string>
+    <string name="sexo_cadastro">Sexo</string>
+    <string name="objetivo_cadastro">Objetivo</string>
+    <string name="perder_peso">Perder peso</string>
+    <string name="ganhar_musculo">Ganhar Músculo</string>
+    <string name="ambos_cadastro">Ambos</string>
+    <string name="objetivo">"Objetivo: "</string>
 </resources>
