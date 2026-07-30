@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">ListViewUsuarios</string>
     <string name="nome_usuario_cadastro">Nome</string>
     <string name="idade_cadastro">Idade</string>
     <string name="limpar_cadastro">Limpar</string>
@@ -24,4 +24,5 @@
     <string name="ganhar_musculo">Ganhar Músculo</string>
     <string name="ambos_cadastro">Ambos</string>
     <string name="objetivo">"Objetivo: "</string>
+    <string name="usuario_clicado">"Usuário clicado: "</string>
 </resources>

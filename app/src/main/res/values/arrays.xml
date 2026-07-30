@@ -5,4 +5,75 @@
         <item>@string/masculino</item>
         <item>@string/feminino</item>
     </string-array>
+
+    <string-array name="objetivo">
+        <item>@string/perder_peso</item>
+        <item>@string/ganhar_musculo</item>
+        <item>@string/ambos_cadastro</item>
+    </string-array>
+
+    <string-array name="usuarios_nome">
+        <item>Ana</item>
+        <item>Lucas</item>
+        <item>Roberta</item>
+        <item>Maria</item>
+        <item>Sheila</item>
+        <item>Isabela</item>
+        <item>Roberto</item>
+        <item>Djavan</item>
+        <item>Luis</item>
+        <item>David</item>
+    </string-array>
+
+    <integer-array name="usuarios_idade">
+        <item>8</item>
+        <item>81</item>
+        <item>68</item>
+        <item>8</item>
+        <item>81</item>
+        <item>32</item>
+        <item>7</item>
+        <item>81</item>
+        <item>23</item>
+        <item>40</item>
+    </integer-array>
+
+    <integer-array name="usuarios_diabetico">
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+    </integer-array>
+
+    <integer-array name="usuarios_objetivo">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>2</item>
+    </integer-array>
+
+    <integer-array name="usuarios_sexo">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>2</item>
+        <item>0</item>
+        <item>2</item>
+        <item>2</item>
+    </integer-array>
 </resources>
