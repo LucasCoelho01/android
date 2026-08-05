@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ListViewUsuarios</string>
+    <string name="app_name">ThemeStylesIcons</string>
     <string name="nome_usuario_cadastro">Nome</string>
     <string name="idade_cadastro">Idade</string>
     <string name="limpar_cadastro">Limpar</string>
@@ -25,4 +25,13 @@
     <string name="ambos_cadastro">Ambos</string>
     <string name="objetivo">"Objetivo: "</string>
     <string name="usuario_clicado">"Usuário clicado: "</string>
+    <string name="logo_food">Logo Food App</string>
+    <string name="descricao">Aplicativo Contador de Calorias</string>
+    <string name="autoria">Autor: Lucas Coelho dos Santos</string>
+    <string name="sobre">Sobre</string>
+    <string name="controle_de_usuarios">Controle de usuários</string>
+    <string name="adicionar">Adicionar</string>
+    <string name="novo_usuario">Novo usuário</string>
+    <string name="curso">Curso: Tecnologia Java</string>
+    <string name="email">Email: lsantos.1995@alunos.utfpr.edu.br</string>
 </resources>

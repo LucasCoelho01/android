@@ -1,9 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.ThemeStylesIcons" parent="Theme.Material3.Light">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/amarelo</item>
+         <item name="colorPrimaryVariant">@color/amarelo_escuro</item>
+         <item name="colorOnPrimary">@color/preto</item>
     </style>
-
-    <style name="Theme.MyApplication" parent="Base.Theme.MyApplication" />
 </resources>

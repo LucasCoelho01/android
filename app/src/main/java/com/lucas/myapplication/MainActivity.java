@@ -1,5 +1,6 @@
 package com.lucas.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -12,6 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String KEY_NOME = "KEY_NOME";
+    public static final String KEY_IDADE = "KEY_IDADE";
+    public static final String KEY_DIABETICO = "KEY_DIABETICO";
+    public static final String KEY_OBJETIVO = "KEY_OBJETIVO";
+    public static final String KEY_SEXO = "KEY_SEXO";
     private EditText editTextNomeCadastro, editTextIdadeCadastro;
     private CheckBox checkBoxDiabetico;
     private RadioGroup radioGroupObjetivo;
@@ -21,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setTitle(getString(R.string.novo_usuario));
 
         editTextNomeCadastro = findViewById(R.id.editTextNomeCadastro);
         editTextIdadeCadastro = findViewById(R.id.editTextIdadeCadastro);
@@ -49,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
 
         int radioGroupId = radioGroupObjetivo.getCheckedRadioButtonId();
 
-        String objetivo;
+        Objetivo objetivo;
 
         if (radioGroupId == R.id.radioButtonPerderPeso) {
-            objetivo = getString(R.string.perder_peso);
+            objetivo = Objetivo.Perder_peso;
         } else if (radioGroupId == R.id.radioButtonGanharMusculo) {
-            objetivo = getString(R.string.ganhar_musculo);
+            objetivo =Objetivo.Ganhar_musculo;
         } else if (radioGroupId == R.id.radioButtonAmbos) {
-            objetivo = getString(R.string.ambos_cadastro);
+            objetivo = Objetivo.Ambos;
         } else {
             Toast.makeText(this, R.string.faltou_selecionar_o_sexo, Toast.LENGTH_LONG).show();
             return;
@@ -64,15 +72,19 @@ public class MainActivity extends AppCompatActivity {
 
         boolean diabetico = checkBoxDiabetico.isChecked();
 
-        String sexo = (String) spinnerSexo.getSelectedItem();
+        int sexo = spinnerSexo.getSelectedItemPosition();
 
-        Toast.makeText(this,
-                        getString(R.string.nome_valor) + nome + "\n" +
-                             getString(R.string.idade_valor) + idade + "\n" +
-                             (diabetico ? getString(R.string.diabetico_true): getString(R.string.diabetico_false)) + "\n" +
-                             getString(R.string.objetivo) + objetivo + "\n" +
-                             getString(R.string.sexo_valor) + sexo,
-                        Toast.LENGTH_LONG).show();
+        Intent intentResposta = new Intent();
+
+        intentResposta.putExtra(KEY_NOME, nome);
+        intentResposta.putExtra(KEY_IDADE, Integer.parseInt(idade));
+        intentResposta.putExtra(KEY_DIABETICO, diabetico);
+        intentResposta.putExtra(KEY_OBJETIVO, objetivo.toString());
+        intentResposta.putExtra(KEY_SEXO, sexo);
+
+        setResult(MainActivity.RESULT_OK, intentResposta);
+
+        finish();
     }
 
     public void limpar(View view) {
