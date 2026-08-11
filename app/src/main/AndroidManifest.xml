@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ThemeStylesIcons">
         <activity
-            android:name=".MainActivity"
+            android:name=".UsuarioActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"></activity>
         <activity

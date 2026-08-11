@@ -5,9 +5,9 @@ public class Usuario {
     private int idade;
     private boolean diabetico;
     private Objetivo objetivo;
-    private Sexo sexo;
+    private int sexo;
 
-    public Usuario(String nome, int idade, boolean diabetico, Objetivo objetivo, Sexo sexo) {
+    public Usuario(String nome, int idade, boolean diabetico, Objetivo objetivo, int sexo) {
         this.nome = nome;
         this.idade = idade;
         this.diabetico = diabetico;
@@ -47,11 +47,11 @@ public class Usuario {
         this.objetivo = objetivo;
     }
 
-    public Sexo getSexo() {
+    public int getSexo() {
         return sexo;
     }
 
-    public void setSexo(Sexo sexo) {
+    public void setSexo(int sexo) {
         this.sexo = sexo;
     }
 

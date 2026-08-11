@@ -2,12 +2,11 @@ package com.lucas.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -15,42 +14,24 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuariosActivity extends AppCompatActivity {
+    private RecyclerView recyclerViewUsuarios;
+    private RecyclerView.LayoutManager  layoutManager;
 
-    private ListView listViewUsuarios;
+    private UsuarioRecyclerViewAdapter usuarioRecyclerViewAdapter;
+
 
     private List<Usuario> listaUsuarios;
 
-    private UsuarioAdapter usuarioAdapter;
-    
-    ActivityResultLauncher<Intent> launcherNovoUsuario = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == UsuariosActivity.RESULT_OK) {
-                Intent intent = result.getData();
+    private int posicaoSelecionada = -1;
 
-                Bundle bundle = intent.getExtras();
-
-                if (bundle != null) {
-                    String nome = bundle.getString(MainActivity.KEY_NOME);
-                    int idade = bundle.getInt(MainActivity.KEY_IDADE);
-                    boolean diabetico = bundle.getBoolean(MainActivity.KEY_DIABETICO);
-                    String objetivo = bundle.getString(MainActivity.KEY_OBJETIVO);
-                    int sexo = bundle.getInt(MainActivity.KEY_SEXO);
-
-                    Usuario usuario = new Usuario(nome, idade, diabetico, Objetivo.valueOf(objetivo), Sexo.values()[sexo]);
-
-                    listaUsuarios.add(usuario);
-
-                    usuarioAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +40,13 @@ public class UsuariosActivity extends AppCompatActivity {
 
         setTitle(getString(R.string.controle_de_usuarios));
 
-        listViewUsuarios = findViewById(R.id.listViewUsuarios);
+        recyclerViewUsuarios = findViewById(R.id.listViewUsuarios);
 
-        listViewUsuarios.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        layoutManager = new LinearLayoutManager(this);
 
-                Usuario usuario = (Usuario) listViewUsuarios.getItemAtPosition(position);
-
-                Toast.makeText(getApplicationContext(),
-                       getString(R.string.usuario_clicado) + usuario.getNome(),
-                        Toast.LENGTH_LONG).show();
-
-            }
-        });
+        recyclerViewUsuarios.setLayoutManager(layoutManager);
+        recyclerViewUsuarios.setHasFixedSize(true);
+        recyclerViewUsuarios.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
 
         popularListaUsuarios();
     }
@@ -109,9 +83,47 @@ public class UsuariosActivity extends AppCompatActivity {
             listaUsuarios.add(usuario);
         }*/
 
-        usuarioAdapter = new UsuarioAdapter(this, listaUsuarios);
+        usuarioRecyclerViewAdapter = new UsuarioRecyclerViewAdapter(this, listaUsuarios);
+        usuarioRecyclerViewAdapter.setOnCreateContextMenu(new UsuarioRecyclerViewAdapter.OnCreateContextMenu() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, int position, MenuItem.OnMenuItemClickListener menuItemClickListener) {
+                getMenuInflater().inflate(R.menu.usuarios_item_selecionado, menu);
 
-        listViewUsuarios.setAdapter(usuarioAdapter);
+                for (int i = 0; i < menu.size(); i++){
+                    menu.getItem(i).setOnMenuItemClickListener(menuItemClickListener);
+                }
+            }
+        });
+
+        usuarioRecyclerViewAdapter.setOnContextMenuClickListener(new UsuarioRecyclerViewAdapter.OnContextMenuClickListener() {
+
+            @Override
+            public boolean onContextMenuItemClick(MenuItem menuItem, int position) {
+
+                int idMenuItem = menuItem.getItemId();
+
+                if (idMenuItem == R.id.menuItemEditar){
+                    editarUsuario(position);
+                    return true;
+                }else
+                if (idMenuItem == R.id.menuItemExcluir){
+                    excluirUsuario(position);
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
+
+        usuarioRecyclerViewAdapter.setOnItemClickListener(new UsuarioRecyclerViewAdapter.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(View view, int position) {
+                editarUsuario(position);
+            }
+        });
+
+        recyclerViewUsuarios.setAdapter(usuarioRecyclerViewAdapter);
     }
 
     public void abrirSobre() {
@@ -119,9 +131,36 @@ public class UsuariosActivity extends AppCompatActivity {
 
         startActivity(intentAbertura);
     }
+    
+    ActivityResultLauncher<Intent> launcherNovoUsuario = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == UsuariosActivity.RESULT_OK) {
+                Intent intent = result.getData();
 
-    public void adicionarUsuario() {
-        Intent intentAbertura = new Intent(this, MainActivity.class);
+                Bundle bundle = intent.getExtras();
+
+                if (bundle != null) {
+                    String nome = bundle.getString(UsuarioActivity.KEY_NOME);
+                    int idade = bundle.getInt(UsuarioActivity.KEY_IDADE);
+                    boolean diabetico = bundle.getBoolean(UsuarioActivity.KEY_DIABETICO);
+                    String objetivo = bundle.getString(UsuarioActivity.KEY_OBJETIVO);
+                    int sexo = bundle.getInt(UsuarioActivity.KEY_SEXO);
+
+                    Usuario usuario = new Usuario(nome, idade, diabetico, Objetivo.valueOf(objetivo), sexo);
+
+                    listaUsuarios.add(usuario);
+
+                    usuarioRecyclerViewAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+    });
+    public void abrirNovousuario(){
+
+        Intent intentAbertura = new Intent(this, UsuarioActivity.class);
+
+        intentAbertura.putExtra(UsuarioActivity.KEY_MODO, UsuarioActivity.MODO_NOVO);
 
         launcherNovoUsuario.launch(intentAbertura);
     }
@@ -138,7 +177,7 @@ public class UsuariosActivity extends AppCompatActivity {
         int idMenuItem = item.getItemId();
 
         if (idMenuItem == R.id.menuItemAdicionar) {
-            adicionarUsuario();
+            abrirNovousuario();
             return true;
         } else if (idMenuItem == R.id.menuItemSobre) {
             abrirSobre();
@@ -146,5 +185,67 @@ public class UsuariosActivity extends AppCompatActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+    ActivityResultLauncher<Intent> launcherEditarUsuario = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+
+            new ActivityResultCallback<ActivityResult>() {
+
+                @Override
+                public void onActivityResult(ActivityResult result) {
+
+                    if (result.getResultCode() == UsuariosActivity.RESULT_OK){
+
+                        Intent intent = result.getData();
+
+                        Bundle bundle = intent.getExtras();
+
+                        if (bundle != null){
+
+                            String nome = bundle.getString(UsuarioActivity.KEY_NOME);
+                            int idade = bundle.getInt(UsuarioActivity.KEY_IDADE);
+                            boolean diabetico = bundle.getBoolean(UsuarioActivity.KEY_DIABETICO);
+                            String objetivoTexto = bundle.getString(UsuarioActivity.KEY_OBJETIVO);
+                            int sexo = bundle.getInt(UsuarioActivity.KEY_SEXO);
+
+                            Usuario usuario = listaUsuarios.get(posicaoSelecionada);
+
+                            usuario.setNome(nome);
+                            usuario.setIdade(idade);
+                            usuario.setDiabetico(diabetico);
+                            usuario.setSexo(sexo);
+
+                            Objetivo objetivo = Objetivo.valueOf(objetivoTexto);
+                            usuario.setObjetivo(objetivo);
+
+                            usuarioRecyclerViewAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    posicaoSelecionada = -1;
+                }
+            });
+
+    private void editarUsuario(int posicao){
+
+        posicaoSelecionada = posicao;
+
+        Usuario usuario = listaUsuarios.get(posicaoSelecionada);
+
+        Intent intentAbertura = new Intent(this, UsuarioActivity.class);
+
+        intentAbertura.putExtra(UsuarioActivity.KEY_MODO, UsuarioActivity.MODO_EDITAR);
+
+        intentAbertura.putExtra(UsuarioActivity.KEY_NOME, usuario.getNome());
+        intentAbertura.putExtra(UsuarioActivity.KEY_IDADE, usuario.getIdade());
+        intentAbertura.putExtra(UsuarioActivity.KEY_DIABETICO, usuario.isDiabetico());
+        intentAbertura.putExtra(UsuarioActivity.KEY_OBJETIVO, usuario.getObjetivo().toString());
+        intentAbertura.putExtra(UsuarioActivity.KEY_SEXO, usuario.getSexo());
+
+
+        launcherEditarUsuario.launch(intentAbertura);
+    }
+    private void excluirUsuario(int posicao){
+        listaUsuarios.remove(posicao);
+        usuarioRecyclerViewAdapter.notifyDataSetChanged();
     }
 }
