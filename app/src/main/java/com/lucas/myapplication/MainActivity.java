@@ -2,13 +2,15 @@ package com.lucas.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerSexo = findViewById(R.id.spinnerSexo);
     }
 
-    public void salvar(View view) {
+    public void salvar() {
         String nome = editTextNomeCadastro.getText().toString();
         String idade = editTextIdadeCadastro.getText().toString();
 
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    public void limpar(View view) {
+    public void limpar() {
         editTextNomeCadastro.setText(null);
         editTextIdadeCadastro.setText(null);
         checkBoxDiabetico.setChecked(false);
@@ -97,5 +99,27 @@ public class MainActivity extends AppCompatActivity {
         editTextNomeCadastro.requestFocus();
 
         Toast.makeText(this, R.string.campos_apagados, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.usuario_opcoes, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int idMenuItem = item.getItemId();
+
+        if (idMenuItem == R.id.menuItemSalvar) {
+            salvar();
+            return true;
+        } else if (idMenuItem == R.id.menuItemLimpar) {
+            limpar();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }

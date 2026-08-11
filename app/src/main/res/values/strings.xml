@@ -27,11 +27,15 @@
     <string name="usuario_clicado">"Usuário clicado: "</string>
     <string name="logo_food">Logo Food App</string>
     <string name="descricao">Aplicativo Contador de Calorias</string>
-    <string name="autoria">Autor: Lucas Coelho dos Santos</string>
+    <string name="autoria">Autor: <a href = "www.linkedin.com/in/lucas-coelho-dos-santos-1b5888109">Lucas Coelho dos Santos</a></string>
     <string name="sobre">Sobre</string>
     <string name="controle_de_usuarios">Controle de usuários</string>
     <string name="adicionar">Adicionar</string>
     <string name="novo_usuario">Novo usuário</string>
     <string name="curso">Curso: Tecnologia Java</string>
-    <string name="email">Email: lsantos.1995@alunos.utfpr.edu.br</string>
+    <string name="email">lsantos.1995@alunos.utfpr.edu.br</string>
+    <string name="url">www.utfpr.edu.br</string>
+    <string name="nenhum_aplicativo_para_abrir_web">Nenhum aplicativo para abrir web</string>
+    <string name="nenhum_aplicativo_para_enviar_email">Nenhum aplicativo para enviar email</string>
+    <string name="contato_pelo_aplicativo">Contato pelo aplicativo</string>
 </resources>

@@ -2,6 +2,8 @@ package com.lucas.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -11,6 +13,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -111,15 +114,37 @@ public class UsuariosActivity extends AppCompatActivity {
         listViewUsuarios.setAdapter(usuarioAdapter);
     }
 
-    public void abrirSobre(View view) {
+    public void abrirSobre() {
         Intent intentAbertura = new Intent(this, AutoriaActivity.class);
 
         startActivity(intentAbertura);
     }
 
-    public void adicionarUsuario(View view) {
+    public void adicionarUsuario() {
         Intent intentAbertura = new Intent(this, MainActivity.class);
 
         launcherNovoUsuario.launch(intentAbertura);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.usuarios_opcoes, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int idMenuItem = item.getItemId();
+
+        if (idMenuItem == R.id.menuItemAdicionar) {
+            adicionarUsuario();
+            return true;
+        } else if (idMenuItem == R.id.menuItemSobre) {
+            abrirSobre();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -112,29 +112,6 @@
                 android:text="@string/ambos_cadastro" />
         </RadioGroup>
 
-        <Button
-            android:id="@+id/buttonLimpar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="limpar"
-            android:text="@string/limpar_cadastro"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/buttonSalvar"
-            app:layout_constraintTop_toTopOf="@+id/buttonSalvar" />
-
-        <Button
-            android:id="@+id/buttonSalvar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:onClick="salvar"
-            android:text="@string/salvar_cadastro"
-            app:layout_constraintEnd_toStartOf="@+id/buttonLimpar"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerSexo" />
-
         <Spinner
             android:id="@+id/spinnerSexo"
             android:layout_width="0dp"
