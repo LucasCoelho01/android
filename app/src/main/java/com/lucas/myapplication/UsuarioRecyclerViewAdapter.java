@@ -31,7 +31,7 @@ public class UsuarioRecyclerViewAdapter extends RecyclerView.Adapter<UsuarioRecy
     }
 
     interface OnItemLongClickListener {
-        void onItemLongClick(View view, int position);
+        boolean onItemLongClick(View view, int position);
     }
 
     interface OnCreateContextMenu {

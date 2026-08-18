@@ -35,6 +35,8 @@ public class UsuarioActivity extends AppCompatActivity {
 
     private int modo;
 
+    private Usuario usuarioOriginal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +73,8 @@ public class UsuarioActivity extends AppCompatActivity {
 
                 Objetivo objetivo = Objetivo.valueOf(objetivoTexto);
 
+                usuarioOriginal = new Usuario(nome, idade, diabetico, objetivo, sexo);
+
                 editTextNomeCadastro.setText(nome);
                 editTextIdadeCadastro.setText(String.valueOf(idade));
                 checkBoxDiabetico.setChecked(diabetico);
@@ -103,7 +107,7 @@ public class UsuarioActivity extends AppCompatActivity {
 
     public void salvar() {
         String nome = editTextNomeCadastro.getText().toString();
-        String idade = editTextIdadeCadastro.getText().toString();
+        String idadeString = editTextIdadeCadastro.getText().toString();
 
         if (nome.trim().isEmpty()) {
             Toast.makeText(this, R.string.preencha_o_nome_corretamente, Toast.LENGTH_LONG).show();
@@ -112,12 +116,14 @@ public class UsuarioActivity extends AppCompatActivity {
             return;
         }
 
-        if (idade.trim().isEmpty()) {
+        if (idadeString.trim().isEmpty()) {
             Toast.makeText(this, R.string.preencha_a_idade_corretamente, Toast.LENGTH_LONG).show();
 
             editTextNomeCadastro.requestFocus();
             return;
         }
+
+        int idade = Integer.parseInt(idadeString);
 
         int radioGroupId = radioGroupObjetivo.getCheckedRadioButtonId();
 
@@ -138,10 +144,24 @@ public class UsuarioActivity extends AppCompatActivity {
 
         int sexo = spinnerSexo.getSelectedItemPosition();
 
+        if (modo == MODO_EDITAR
+                && nome.equalsIgnoreCase(usuarioOriginal.getNome())
+                && idade == usuarioOriginal.getIdade()
+                && diabetico == usuarioOriginal.isDiabetico()
+                && objetivo == usuarioOriginal.getObjetivo()
+                && sexo == usuarioOriginal.getSexo()) {
+
+            setResult(UsuarioActivity.RESULT_CANCELED);
+
+            finish();
+            return;
+        }
+
+
         Intent intentResposta = new Intent();
 
         intentResposta.putExtra(KEY_NOME, nome);
-        intentResposta.putExtra(KEY_IDADE, Integer.parseInt(idade));
+        intentResposta.putExtra(KEY_IDADE, idade);
         intentResposta.putExtra(KEY_DIABETICO, diabetico);
         intentResposta.putExtra(KEY_OBJETIVO, objetivo.toString());
         intentResposta.putExtra(KEY_SEXO, sexo);

@@ -1,6 +1,16 @@
 package com.lucas.myapplication;
 
+import java.util.Comparator;
+
 public class Usuario {
+
+    public static Comparator<Usuario> ordenacaoCrescente = new Comparator<Usuario>() {
+        @Override
+        public int compare(Usuario usuario1, Usuario usuario2) {
+            return usuario1.getNome().compareToIgnoreCase(usuario2.getNome());
+        }
+    };
+
     private String nome;
     private int idade;
     private boolean diabetico;

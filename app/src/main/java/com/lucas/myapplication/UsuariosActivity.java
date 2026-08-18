@@ -1,9 +1,11 @@
 package com.lucas.myapplication;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,11 +16,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UsuariosActivity extends AppCompatActivity {
@@ -27,10 +31,57 @@ public class UsuariosActivity extends AppCompatActivity {
 
     private UsuarioRecyclerViewAdapter usuarioRecyclerViewAdapter;
 
-
     private List<Usuario> listaUsuarios;
 
     private int posicaoSelecionada = -1;
+
+    private ActionMode actionMode;
+
+    private View viewSelecionada;
+    private Drawable backgroundDrawable;
+    private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.usuarios_item_selecionado, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            int idMenuItem = item.getItemId();
+
+            if (idMenuItem == R.id.menuItemEditar){
+                editarUsuario();
+                return true;
+            }else
+            if (idMenuItem == R.id.menuItemExcluir){
+                excluirUsuario();
+                mode.finish();
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            if (viewSelecionada != null) {
+                viewSelecionada.setBackground(backgroundDrawable);
+            }
+
+            actionMode = null;
+            viewSelecionada = null;
+            backgroundDrawable = null;
+
+            recyclerViewUsuarios.setEnabled(true);
+        }
+    };
 
 
     @Override
@@ -52,74 +103,42 @@ public class UsuariosActivity extends AppCompatActivity {
     }
 
     private void popularListaUsuarios() {
-        /*String[] usuarios_nomes = getResources().getStringArray(R.array.usuarios_nome);
-        int[] usuarios_idades = getResources().getIntArray(R.array.usuarios_idade);
-        int[] usuarios_diabeticos = getResources().getIntArray(R.array.usuarios_diabetico);
-        int[] usuarios_objetivos = getResources().getIntArray(R.array.usuarios_objetivo);
-        int[] usuarios_sexos = getResources().getIntArray(R.array.usuarios_sexo);*/
 
         listaUsuarios = new ArrayList<>();
 
-        /*Usuario usuario;
-        boolean diabetico;
-        Objetivo objetivo;
-        Sexo sexo;
-
-        Objetivo[] objetivos = Objetivo.values();
-        Sexo[] sexos = Sexo.values();
-
-        for (int i = 0; i < usuarios_nomes.length; i++) {
-            diabetico = (usuarios_diabeticos[i] == 1);
-
-            objetivo = objetivos[usuarios_objetivos[i]];
-            sexo = sexos[usuarios_sexos[i]];
-
-            usuario= new Usuario(usuarios_nomes[i],
-                                  usuarios_idades[i],
-                                  diabetico,
-                                  objetivo,
-                                   sexo);
-
-            listaUsuarios.add(usuario);
-        }*/
 
         usuarioRecyclerViewAdapter = new UsuarioRecyclerViewAdapter(this, listaUsuarios);
-        usuarioRecyclerViewAdapter.setOnCreateContextMenu(new UsuarioRecyclerViewAdapter.OnCreateContextMenu() {
-            @Override
-            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, int position, MenuItem.OnMenuItemClickListener menuItemClickListener) {
-                getMenuInflater().inflate(R.menu.usuarios_item_selecionado, menu);
 
-                for (int i = 0; i < menu.size(); i++){
-                    menu.getItem(i).setOnMenuItemClickListener(menuItemClickListener);
-                }
-            }
-        });
-
-        usuarioRecyclerViewAdapter.setOnContextMenuClickListener(new UsuarioRecyclerViewAdapter.OnContextMenuClickListener() {
-
-            @Override
-            public boolean onContextMenuItemClick(MenuItem menuItem, int position) {
-
-                int idMenuItem = menuItem.getItemId();
-
-                if (idMenuItem == R.id.menuItemEditar){
-                    editarUsuario(position);
-                    return true;
-                }else
-                if (idMenuItem == R.id.menuItemExcluir){
-                    excluirUsuario(position);
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-        });
 
         usuarioRecyclerViewAdapter.setOnItemClickListener(new UsuarioRecyclerViewAdapter.OnItemClickListener() {
 
             @Override
             public void onItemClick(View view, int position) {
-                editarUsuario(position);
+                posicaoSelecionada = position;
+
+                editarUsuario();
+            }
+        });
+
+        usuarioRecyclerViewAdapter.setOnItemLongClickListener(new UsuarioRecyclerViewAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, int position) {
+                if (actionMode != null) {
+                    return false;
+                }
+
+                posicaoSelecionada = position;
+
+                viewSelecionada = view;
+                backgroundDrawable = view.getBackground();
+
+                view.setBackgroundColor(Color.LTGRAY);
+
+                recyclerViewUsuarios.setEnabled(false);
+
+                actionMode = startSupportActionMode(actionModeCallback);
+
+                return true;
             }
         });
 
@@ -150,6 +169,8 @@ public class UsuariosActivity extends AppCompatActivity {
                     Usuario usuario = new Usuario(nome, idade, diabetico, Objetivo.valueOf(objetivo), sexo);
 
                     listaUsuarios.add(usuario);
+
+                    Collections.sort(listaUsuarios, Usuario.ordenacaoCrescente);
 
                     usuarioRecyclerViewAdapter.notifyDataSetChanged();
                 }
@@ -217,18 +238,21 @@ public class UsuariosActivity extends AppCompatActivity {
                             Objetivo objetivo = Objetivo.valueOf(objetivoTexto);
                             usuario.setObjetivo(objetivo);
 
+                            Collections.sort(listaUsuarios, Usuario.ordenacaoCrescente);
+
                             usuarioRecyclerViewAdapter.notifyDataSetChanged();
                         }
                     }
 
                     posicaoSelecionada = -1;
+
+                    if (actionMode != null) {
+                        actionMode.finish();
+                    }
                 }
             });
 
-    private void editarUsuario(int posicao){
-
-        posicaoSelecionada = posicao;
-
+    private void editarUsuario(){
         Usuario usuario = listaUsuarios.get(posicaoSelecionada);
 
         Intent intentAbertura = new Intent(this, UsuarioActivity.class);
@@ -244,8 +268,8 @@ public class UsuariosActivity extends AppCompatActivity {
 
         launcherEditarUsuario.launch(intentAbertura);
     }
-    private void excluirUsuario(int posicao){
-        listaUsuarios.remove(posicao);
+    private void excluirUsuario() {
+        listaUsuarios.remove(posicaoSelecionada);
         usuarioRecyclerViewAdapter.notifyDataSetChanged();
     }
 }
