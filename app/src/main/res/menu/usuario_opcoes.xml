@@ -12,4 +12,8 @@
         android:icon="@android:drawable/ic_delete"
         android:title="@string/limpar_cadastro"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menuItemSugerir"
+        android:checkable="true"
+        android:title="@string/sugerir" />
 </menu>

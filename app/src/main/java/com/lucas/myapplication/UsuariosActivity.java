@@ -39,6 +39,9 @@ public class UsuariosActivity extends AppCompatActivity {
 
     private View viewSelecionada;
     private Drawable backgroundDrawable;
+
+    public static final String ARQUIVO_PREFERENCIAS = "com.lucas.myapplication.PREFERENCIAS";
+
     private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {

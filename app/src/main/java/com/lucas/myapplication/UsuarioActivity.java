@@ -1,6 +1,8 @@
 package com.lucas.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +24,8 @@ public class UsuarioActivity extends AppCompatActivity {
     public static final String KEY_OBJETIVO = "KEY_OBJETIVO";
     public static final String KEY_SEXO = "KEY_SEXO";
     public static final String KEY_MODO     = "MODO";
+    public static final String KEY_SUGERIR     = "SUGERIR";
+    public static final String KEY_ULTIMO_SEXO     = "ULTIMO_SEXO";
 
     public static final int MODO_NOVO   = 0;
     public static final int MODO_EDITAR = 1;
@@ -37,6 +41,9 @@ public class UsuarioActivity extends AppCompatActivity {
 
     private Usuario usuarioOriginal;
 
+    private boolean sugerir = false;
+    private int ultimoSexo = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +58,8 @@ public class UsuarioActivity extends AppCompatActivity {
         radioButtonPerderPeso = findViewById(R.id.radioButtonPerderPeso);
         radioButtonAmbos = findViewById(R.id.radioButtonAmbos);
 
+        lerPreferencias();
+
         Intent intentAbertura = getIntent();
 
         Bundle bundle = intentAbertura.getExtras();
@@ -61,6 +70,11 @@ public class UsuarioActivity extends AppCompatActivity {
 
             if (modo == MODO_NOVO){
                 setTitle(getString(R.string.novo_usuario));
+
+                if (sugerir) {
+                    spinnerSexo.setSelection(ultimoSexo);
+                }
+
             }else{
                 setTitle(getString(R.string.editar));
 
@@ -157,6 +171,7 @@ public class UsuarioActivity extends AppCompatActivity {
             return;
         }
 
+        salvarUltimoSexo(sexo);
 
         Intent intentResposta = new Intent();
 
@@ -189,7 +204,61 @@ public class UsuarioActivity extends AppCompatActivity {
             limpar();
             return true;
         } else {
-            return super.onOptionsItemSelected(item);
+            if (idMenuItem == R.id.menuItemSugerir) {
+                boolean valor = !item.isChecked();
+
+                salvarSugerir(valor);
+
+                item.setChecked(valor);
+
+                if (sugerir) {
+                    spinnerSexo.setSelection(ultimoSexo);
+                }
+
+                return true;
+            } else {
+                return super.onOptionsItemSelected(item);
+            }
         }
+    }
+
+    private void lerPreferencias() {
+        SharedPreferences shared = getSharedPreferences(UsuariosActivity.ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+
+        sugerir = shared.getBoolean(KEY_SUGERIR, sugerir);
+        ultimoSexo = shared.getInt(KEY_ULTIMO_SEXO, ultimoSexo);
+    }
+
+    private void salvarSugerir(boolean novoValor) {
+        SharedPreferences shared = getSharedPreferences(UsuariosActivity.ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = shared.edit();
+
+        editor.putBoolean(KEY_SUGERIR, novoValor);
+
+        editor.commit();
+
+        sugerir = novoValor;
+    }
+
+    private void salvarUltimoSexo(int novoValor) {
+        SharedPreferences shared = getSharedPreferences(UsuariosActivity.ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = shared.edit();
+
+        editor.putInt(KEY_ULTIMO_SEXO, novoValor);
+
+        editor.commit();
+
+        ultimoSexo = novoValor;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.menuItemSugerir);
+
+        item.setChecked(sugerir);
+
+        return true;
     }
 }
